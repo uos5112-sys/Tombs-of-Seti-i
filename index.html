@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>세티 1세의 무덤 KV17 탐험</title>
+<meta name="author" content="Hyeonjin Jang">
+<meta name="copyright" content="Copyright © 2026 Hyeonjin Jang">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Nanum+Myeongjo:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EBD49A; --panel:#F4E6BF; --ink:#2B1D12; --muted:#6B5536;
+  --blue:#1F4F8F; --red:#9C3A22; --green:#3F7A63; --rock:#C9A866; --rockline:#A8884A;
+  --night:#14224A; --star:#F0C75E;
+  --display:"Nanum Myeongjo","Noto Serif KR","AppleMyungjo","Batang",serif;
+  --body:"Gowun Batang","Noto Serif KR","AppleMyungjo","Batang",serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1C1710; --panel:#272015; --ink:#EDDDB4; --muted:#B39E74;
+    --blue:#79A5DE; --red:#D8714F; --green:#7BB39A; --rock:#3A3020; --rockline:#54452C;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1C1710; --panel:#272015; --ink:#EDDDB4; --muted:#B39E74;
+  --blue:#79A5DE; --red:#D8714F; --green:#7BB39A; --rock:#3A3020; --rockline:#54452C;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.85}
+img,svg{max-width:100%}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 1.25rem}
+.prose{max-width:38em}
+
+header.hero{padding:3rem 0 1rem}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(2.1rem,6vw,3.8rem);line-height:1.15;margin:0 0 .6rem;letter-spacing:-.01em}
+.hero p.lede{margin:0;color:var(--muted);max-width:34em}
+.facts{display:flex;flex-wrap:wrap;gap:.5rem 2rem;margin:1.4rem 0 0;padding:0;list-style:none}
+.facts li{font-size:.95rem}
+.facts b{font-family:var(--display);font-size:1.5rem;display:block;line-height:1.2}
+
+.section-map{margin:1.5rem 0 0;overflow-x:auto}
+.section-map svg{display:block;width:100%;height:auto}
+.zone{cursor:pointer}
+.zone .shape{fill:var(--panel);stroke:var(--ink);stroke-width:1.5;transition:fill .2s}
+.zone:hover .shape{fill:#fff6}
+.zone.active .shape{fill:var(--blue)}
+.zone text{font-family:var(--display);font-size:15px;fill:var(--ink);pointer-events:none}
+.zone.active text{fill:var(--panel)}
+.zone .dot{fill:var(--red)}
+.zone:focus-visible{outline:none}
+.zone:focus-visible .shape{stroke:var(--red);stroke-width:4}
+.map-hint{font-size:.9rem;color:var(--muted);margin:.4rem 0 0}
+
+.panel{margin:1rem 0 3rem;background:var(--panel);border-left:6px solid var(--blue);padding:1.2rem 1.4rem}
+.panel h2{font-family:var(--display);font-size:1.45rem;margin:0 0 .4rem;line-height:1.3}
+.panel p{margin:0 0 .6rem}
+.tag{display:inline-block;font-size:.9rem;border:1.5px solid var(--red);color:var(--red);padding:.05rem .6rem;margin:.2rem .3rem 0 0;text-decoration:none;border-radius:2px}
+.tag:hover{background:var(--red);color:var(--panel)}
+
+.feature{padding:3.5rem 0;border-top:2px solid var(--ink)}
+.feature .where{font-family:var(--display);color:var(--red);font-size:1rem;margin:0}
+.feature h2{font-family:var(--display);font-weight:800;font-size:clamp(1.7rem,4vw,2.5rem);margin:.2rem 0 1rem;line-height:1.2}
+.grid{display:grid;grid-template-columns:1fr;gap:2rem;align-items:start}
+@media (min-width:860px){.grid{grid-template-columns:1.1fr 1fr}}
+.look{margin:1rem 0 0;padding-left:1.1rem}
+.look li{margin:.3rem 0}
+figure{margin:0}
+figcaption{font-size:.88rem;color:var(--muted);margin-top:.4rem}
+
+.hours{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:.8rem}
+@media (min-width:560px){.hours{grid-template-columns:repeat(12,1fr)}}
+.hours button{font-family:var(--display);font-size:1rem;padding:.55rem 0;border:1.5px solid var(--ink);background:var(--panel);color:var(--ink);cursor:pointer}
+.hours button[aria-pressed="true"]{background:var(--blue);color:var(--panel);border-color:var(--blue)}
+.hours button.here{border-color:var(--red);border-width:3px}
+.hour-note{min-height:5.5em;background:var(--panel);padding:1rem 1.2rem;margin-top:.6rem}
+.hour-note b{font-family:var(--display)}
+
+.night{background:var(--night);color:#EBDDB8;border-top:none;padding:4rem 0}
+.night .where{color:var(--star)}
+.night a{color:var(--star)}
+.skymap{overflow-x:auto}
+.skymap svg{display:block;width:100%;height:auto}
+.fig{cursor:pointer}
+.fig .body{fill:none;stroke:var(--star);stroke-width:2;opacity:.75;transition:opacity .2s}
+.fig .st{fill:var(--star)}
+.fig:hover .body,.fig.active .body{opacity:1;stroke-width:3}
+.fig.active .body{stroke:#fff}
+.fig:focus-visible{outline:none}
+.fig:focus-visible .body{stroke:#fff;stroke-width:3.5}
+.sky-note{background:#0E1836;padding:1rem 1.2rem;min-height:5em;margin-top:.8rem}
+.sky-note b{font-family:var(--display);color:var(--star)}
+
+.visit{padding:3rem 0 4rem;border-top:2px solid var(--ink)}
+.visit h2{font-family:var(--display);font-size:1.6rem;margin:0 0 .8rem}
+footer{font-size:.85rem;color:var(--muted);padding:0 0 3rem}
+.theme-toggle{position:fixed;right:1rem;bottom:calc(1rem + env(safe-area-inset-bottom,0px));font-family:var(--body);background:var(--panel);color:var(--ink);border:1.5px solid var(--ink);padding:.35rem .8rem;cursor:pointer;z-index:5}
+
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:.8rem 0 0}
+.chips button{font-family:var(--body);font-size:.95rem;min-height:44px;padding:.3rem .8rem;border:1.5px solid var(--ink);background:var(--panel);color:var(--ink);cursor:pointer;border-radius:2px;-webkit-tap-highlight-color:transparent}
+.chips button[aria-pressed="true"]{background:var(--blue);color:var(--panel);border-color:var(--blue)}
+.night .chips button{background:#0E1836;color:#EBDDB8;border-color:#F0C75E}
+.night .chips button[aria-pressed="true"]{background:#F0C75E;color:#14224A}
+.zone,.fig{-webkit-tap-highlight-color:transparent}
+@media (hover:none){.zone:hover .shape{fill:var(--panel)}.zone.active .shape{fill:var(--blue)}}
+
+.tip{margin:1rem 0 0;background:var(--bg);border:1.5px dashed var(--green);padding:.8rem 1rem}
+.tip b{font-family:var(--display);color:var(--green);display:block;margin-bottom:.2rem}
+.tip ul{margin:0;padding-left:1.1rem}
+.tip li{margin:.35rem 0}
+.feature .tip{background:var(--panel)}
+.night .tip{background:#0E1836;border-color:#F0C75E}
+.night .tip b{color:#F0C75E}
+.etiquette{margin:.4rem 0 1rem;padding-left:1.1rem}
+.etiquette li{margin:.3rem 0}
+
+.jwrap{margin-top:1.1rem;border-top:1.5px solid var(--ink);padding-top:1rem}
+.jwrap h3{font-family:var(--display);font-size:1.15rem;margin:0 0 .3rem}
+.jgrid{display:grid;grid-template-columns:1fr;gap:1rem;align-items:start}
+@media (min-width:760px){.jgrid{grid-template-columns:minmax(260px,380px) 1fr}}
+.jplan svg{display:block;width:100%;height:auto}
+.jroom{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.jroom .rm{fill:var(--bg);stroke:var(--ink);stroke-width:1.5;transition:fill .2s}
+.jroom.active .rm{fill:var(--blue)}
+.jroom text{font-family:var(--display);font-size:13px;fill:var(--ink);pointer-events:none}
+.jroom.active text{fill:var(--panel)}
+.jroom:focus-visible{outline:none}
+.jroom:focus-visible .rm{stroke:var(--red);stroke-width:3.5}
+.jnote{background:var(--bg);padding:.9rem 1.1rem}
+.jnote h4{font-family:var(--display);font-size:1.1rem;margin:0 0 .3rem}
+.jnote p{margin:0 0 .5rem}
+.jnote .tip{background:var(--panel)}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <h1>세티 1세의 무덤으로 내려가기</h1>
+  <p class="lede">룩소르 서안, 왕가의 계곡 KV17. 입구부터 매장실까지 벽과 천장이 거의 빈틈없이 색을 입힌 조각 그림으로 덮여 있어, 이집트 왕묘 가운데 가장 완성도 높은 장식으로 꼽힙니다. 아래 단면도에서 구역을 눌러 안으로 들어가 보세요. 구역마다 현장에서 무엇을 찾아보면 좋은지 관람 팁을 함께 적었습니다.</p>
+  <ul class="facts">
+    <li><b>약 137m</b>왕가의 계곡에서 가장 길고 깊은 무덤 중 하나</li>
+    <li><b>1817년</b>조반니 벨초니가 발견</li>
+    <li><b>제19왕조</b>기원전 13세기 초, 람세스 2세의 아버지</li>
+  </ul>
+
+  <div class="section-map" role="group" aria-label="KV17 무덤 단면도">
+    <svg viewBox="0 0 1000 360" aria-hidden="false">
+      <defs>
+        <pattern id="rockhatch" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+          <line x1="0" y1="0" x2="0" y2="14" stroke-width="1.2" style="stroke:var(--rockline)"/>
+        </pattern>
+      </defs>
+      <path d="M0 34 Q 60 26 120 30 T 300 24 T 520 30 T 760 22 T 1000 28 L1000 360 L0 360 Z" style="fill:var(--rock)"/>
+      <path d="M0 34 Q 60 26 120 30 T 300 24 T 520 30 T 760 22 T 1000 28 L1000 360 L0 360 Z" fill="url(#rockhatch)" opacity=".5"/>
+      <text x="22" y="22" font-size="14" style="font-family:var(--body);fill:var(--muted)">지표면</text>
+
+      <g class="zone" data-z="A" tabindex="0" role="button" aria-label="A 입구, 들어가기 전에">
+        <polygon class="shape" points="30,40 90,70 90,104 30,74"/><text x="52" y="80">A</text></g>
+      <g class="zone" data-z="B" tabindex="0" role="button" aria-label="B 첫째 복도">
+        <polygon class="shape" points="90,70 200,110 200,144 90,104"/><text x="140" y="116">B</text></g>
+      <g class="zone" data-z="C" tabindex="0" role="button" aria-label="C 둘째 복도">
+        <polygon class="shape" points="200,110 300,150 300,184 200,144"/><text x="244" y="154">C</text><circle class="dot" cx="280" cy="158" r="5"/></g>
+      <g class="zone" data-z="D" tabindex="0" role="button" aria-label="D 셋째 복도">
+        <polygon class="shape" points="300,150 400,190 400,224 300,184"/><text x="344" y="194">D</text><circle class="dot" cx="380" cy="198" r="5"/></g>
+      <g class="zone" data-z="E" tabindex="0" role="button" aria-label="E 우물 방">
+        <polygon class="shape" points="400,190 450,190 450,224 438,224 438,300 412,300 412,224 400,224"/><text x="418" y="214">E</text></g>
+      <g class="zone" data-z="F" tabindex="0" role="button" aria-label="F 기둥 홀">
+        <rect class="shape" x="450" y="160" width="110" height="64"/><text x="498" y="198">F</text><circle class="dot" cx="540" cy="176" r="5"/></g>
+      <g class="zone" data-z="G" tabindex="0" role="button" aria-label="G와 H 아래쪽 복도">
+        <polygon class="shape" points="560,190 770,270 770,304 560,224"/><text x="652" y="246">G · H</text><circle class="dot" cx="740" cy="276" r="5"/></g>
+      <g class="zone" data-z="I" tabindex="0" role="button" aria-label="I 전실">
+        <rect class="shape" x="770" y="270" width="60" height="34"/><text x="794" y="293">I</text></g>
+      <g class="zone" data-z="J" tabindex="0" role="button" aria-label="J 매장실">
+        <path class="shape" d="M830 304 L830 250 L880 250 L880 238 Q 920 206 960 238 L960 304 Z"/><text x="846" y="286">J</text><circle class="dot" cx="920" cy="228" r="5"/></g>
+
+      <path d="M960 290 L 1000 330" stroke-width="1.5" stroke-dasharray="4 4" fill="none" style="stroke:var(--ink)"/>
+      <text x="892" y="334" font-size="13" style="font-family:var(--body);fill:var(--muted)">석관 아래 터널</text>
+      <circle cx="40" cy="345" r="5" style="fill:var(--red)"/>
+      <text x="52" y="350" font-size="13" style="font-family:var(--body);fill:var(--ink)">주요 벽화 위치</text>
+    </svg>
+  </div>
+  <div class="chips" id="zoneChips" role="group" aria-label="구역 선택"></div>
+  <p class="map-hint">구조를 단순화한 도식입니다. 실제 무덤은 기둥 홀 F에서 축이 꺾이며, 구역 기호는 테베 매핑 프로젝트의 표기를 따랐습니다.</p>
+
+  <div class="panel" id="panel" aria-live="polite"></div>
+</header>
+
+<main>
+  <section class="feature wrap" id="amduat">
+    <p class="where">복도 C · D, 그리고 매장실 J</p>
+    <h2>암두아트, 태양이 지나는 밤의 열두 시간</h2>
+    <div class="grid">
+      <div class="prose">
+        <p>'저승에 있는 것'이라는 뜻의 암두아트는 해가 서쪽으로 진 뒤 태양신 라가 배를 타고 저승을 통과해 새벽에 다시 떠오르기까지의 열두 시간을 그린 안내서입니다. 왕은 이 여정에 동행함으로써 태양처럼 매일 다시 태어나기를 바랐습니다.</p>
+        <p>세티 1세 무덤에서 눈여겨볼 점은 내용과 공간의 맞물림입니다. 가파르게 내려가는 복도에 가파른 모래 통로를 지나는 4시와 5시 장면이 배치되어, 관람자가 걷는 길이 그대로 태양의 하강이 됩니다.</p>
+        <p>기둥 홀 옆의 작은 방 Fa에는 암두아트 9~11시가 색칠 없이 검은 윤곽선으로만 그려져 있습니다. 왕이 세상을 떠나 작업이 멈춘 흔적으로, 완성된 벽과 비교하면 장인들이 일하던 순서를 짐작할 수 있습니다.</p>
+        <ul class="look">
+          <li>뱀 모양으로 변한 태양의 배를 신들이 끌고 가는 장면</li>
+          <li>칸마다 나뉜 세 개의 띠(위·가운데·아래 구획) 구성</li>
+          <li>기둥 홀 옆방 Fa에 검은 윤곽선으로만 남은 미완성 장면</li>
+        </ul>
+        <div class="tip"><b>관람 팁</b><ul>
+          <li>벽이 위·가운데·아래 세 줄로 나뉘어 있습니다. 태양신이 탄 배는 늘 가운데 줄에 있으니, 배를 먼저 찾고 위아래로 눈을 넓혀 가세요.</li>
+          <li>배가 뱀 모양으로 변해 밧줄에 끌려가는 장면이 보이면 4시입니다. 물이 없는 모래 땅이라 노를 저을 수 없다는 뜻입니다.</li>
+        </ul></div>
+      </div>
+      <div>
+        <div class="hours" role="group" aria-label="암두아트 시간 선택"></div>
+        <div class="hour-note" id="hourNote" aria-live="polite"></div>
+        <p class="map-hint">빨간 테두리는 경사 복도 D에서 볼 수 있는 시간입니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature wrap" id="gates">
+    <p class="where">기둥 홀 F, 매장실 J</p>
+    <h2>문의 서, 뱀이 지키는 열두 개의 문</h2>
+    <div class="grid">
+      <div class="prose">
+        <p>문의 서도 태양의 밤 여정을 다루지만 초점이 다릅니다. 저승의 각 시간 사이에는 거대한 뱀이 지키는 문이 있고, 태양의 배는 문지기의 이름을 알아야만 통과할 수 있습니다. 배 위의 태양신은 숫양 머리로 표현됩니다.</p>
+        <p>네 기둥이 선 홀 F의 양쪽 벽은 문의 서 5시와 6시로 채워져 있습니다. 5시에는 이집트인, 아시아인, 누비아인, 리비아인 네 민족이 등장하는데, 문의 서에서 이들을 생김새로 구별해 그린 것은 이 무덤이 처음입니다. 안쪽 벽에서는 호루스가 왕을 오시리스와 하토르에게 소개합니다. 같은 문서의 장면은 매장실 앞쪽 기둥 공간에서도 이어집니다.</p>
+        <ul class="look">
+          <li>문 위에 몸을 세운 수호 뱀과 문지기 신들</li>
+          <li>배를 끄는 신들의 행렬</li>
+          <li>기둥마다 왕과 신이 마주 선 장면</li>
+        </ul>
+        <div class="tip"><b>관람 팁</b><ul>
+          <li>세로로 긴 문틀 위에 몸을 세운 뱀이 보이면 그것이 '문'입니다. 문이 하나 나올 때마다 밤의 한 시간이 지나간 것입니다.</li>
+          <li>기둥은 한 바퀴 돌며 네 면을 모두 보세요. 면마다 왕이 서로 다른 신과 마주 서 있습니다.</li>
+        </ul></div>
+      </div>
+      <figure>
+        <svg viewBox="0 0 420 300" role="img" aria-label="문의 서 도식: 뱀이 지키는 문과 숫양 머리 태양신의 배">
+          <rect x="0" y="0" width="420" height="300" style="fill:var(--panel)"/>
+          <g stroke-width="2" fill="none" style="stroke:var(--ink)">
+            <rect x="40" y="60" width="90" height="190"/>
+            <rect x="58" y="90" width="54" height="160" style="fill:var(--bg)"/>
+            <path d="M40 60 L130 60 M50 60 L50 40 L120 40 L120 60" />
+          </g>
+          <path d="M60 40 C 50 20, 80 10, 85 25 C 90 38, 110 20, 110 34 L 116 30" stroke-width="5" fill="none" stroke-linecap="round" style="stroke:var(--green)"/>
+          <circle cx="116" cy="30" r="5" style="fill:var(--green)"/>
+          <path d="M170 240 Q 280 270 390 240 L 380 225 L 180 225 Z" style="fill:var(--red)"/>
+          <rect x="260" y="160" width="46" height="65" fill="none" stroke-width="2" style="stroke:var(--ink)"/>
+          <circle cx="283" cy="150" r="13" style="fill:var(--blue)"/>
+          <path d="M270 146 q-10 4 -4 14 M296 146 q10 4 4 14" stroke-width="2.5" fill="none" style="stroke:var(--ink)"/>
+          <text x="40" y="285" font-size="14" style="font-family:var(--body);fill:var(--muted)">문과 수호 뱀</text>
+          <text x="235" y="285" font-size="14" style="font-family:var(--body);fill:var(--muted)">숫양 머리 태양신의 배</text>
+        </svg>
+        <figcaption>장면 구성을 설명하기 위한 도식이며 원본 벽화를 옮긴 그림이 아닙니다.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="feature wrap" id="mouth">
+    <p class="where">복도 G · H</p>
+    <h2>입 열기 의식, 다시 숨 쉬고 말하기 위해</h2>
+    <div class="grid">
+      <div class="prose">
+        <p>기둥 홀을 지나 다시 내려가는 복도에는 입 열기 의식이 펼쳐집니다. 사제가 특별한 도구로 왕의 조각상이나 미라의 입과 눈을 건드리면, 죽은 이가 저승에서 먹고 마시고 말하고 볼 수 있게 된다고 믿었습니다.</p>
+        <p>의식을 이끄는 셈 사제는 표범 가죽을 걸친 모습으로 구별됩니다. 향을 피우고 물을 붓고 제물을 바치는 절차가 연속된 장면으로 이어져, 벽을 따라 걸으면 의식의 순서를 그대로 따라가게 됩니다.</p>
+        <ul class="look">
+          <li>표범 가죽 차림의 셈 사제</li>
+          <li>입에 대는 자귀 모양의 의식 도구</li>
+          <li>왕의 조각상 앞에서 이어지는 정화와 봉헌</li>
+        </ul>
+        <div class="tip"><b>관람 팁</b><ul>
+          <li>표범 가죽을 걸친 사제를 먼저 찾으면 장면이 쉽게 읽힙니다. 같은 왕의 조각상이 여러 번 반복해 나오며 의식이 한 단계씩 진행됩니다.</li>
+          <li>군데군데 색이 바래거나 비어 있는 곳은 19세기에 벽에 종이를 대고 본을 뜨거나 벽 조각을 떼어 가면서 생긴 손상인 경우가 많습니다.</li>
+          <li>매장실 바로 앞이라 사람이 몰리기 쉬운 구간입니다. 벽 쪽으로 붙어 서서 보면 뒷사람이 지나가기 편합니다.</li>
+        </ul></div>
+      </div>
+      <figure>
+        <svg viewBox="0 0 420 300" role="img" aria-label="입 열기 의식 도식: 사제가 도구를 조각상의 입에 대는 장면">
+          <rect x="0" y="0" width="420" height="300" style="fill:var(--panel)"/>
+          <rect x="250" y="250" width="110" height="14" style="fill:var(--ink)"/>
+          <path d="M290 250 L290 120 Q 290 80 310 70 Q 332 64 334 92 L 336 120 L 336 250 Z" style="fill:var(--blue)"/>
+          <path d="M290 110 L 262 118 L 290 132" style="fill:var(--blue)"/>
+          <circle cx="126" cy="96" r="20" style="fill:var(--red)"/>
+          <path d="M106 120 L146 120 L160 250 L92 250 Z" style="fill:var(--red)"/>
+          <path d="M100 130 Q 126 190 152 130" fill="none" stroke-width="3" stroke-dasharray="3 5" style="stroke:var(--star,#F0C75E)"/>
+          <path d="M146 130 L 236 118" stroke-width="4" stroke-linecap="round" style="stroke:var(--ink)"/>
+          <path d="M236 118 L 262 110 L 252 130 Z" style="fill:var(--ink)"/>
+          <text x="80" y="285" font-size="14" style="font-family:var(--body);fill:var(--muted)">셈 사제</text>
+          <text x="262" y="285" font-size="14" style="font-family:var(--body);fill:var(--muted)">왕의 조각상</text>
+        </svg>
+        <figcaption>의식의 구도를 단순화한 도식입니다.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="feature night" id="ceiling">
+    <div class="wrap">
+      <p class="where">매장실 J, 아치형 천장</p>
+      <h2>천문 천장, 왕을 덮은 밤하늘</h2>
+      <div class="grid">
+        <div class="prose">
+          <p>매장실 안쪽의 한 단 낮은 공간은 천장이 아치형으로 굽어 있고, 짙은 청색 바탕에 황금빛 별자리가 그려져 있습니다. 세티 1세 무덤은 아치형 매장실을 처음 갖춘 왕묘로 알려져 있으며, 석관이 놓였던 자리 바로 위에 하늘을 펼친 셈입니다.</p>
+          <p>천장은 물결 모양의 선을 경계로 둘로 나뉩니다. 한쪽에는 남쪽 하늘의 데칸 별 이름과 그 별들을 맡은 신들의 행렬, 행성의 신들이 있고, 다른 쪽에는 북쪽 하늘의 별자리가 황소, 하마, 사자, 악어, 여러 신의 모습으로 모여 있습니다. 북쪽 별은 지지 않기 때문에 '지지 않는 별', 곧 영원의 상징이었습니다.</p>
+          <p>두 하늘을 가르는 물결선을 은하수로 보는 연구도 있습니다. 오른쪽 하늘에서 별자리를 눌러 보세요.</p>
+          <div class="tip"><b>관람 팁</b><ul>
+            <li>아치형 공간 입구에 서서 천장 전체를 먼저 올려다본 뒤, 물결선을 기준으로 북쪽 하늘과 남쪽 하늘을 나눠 보세요.</li>
+            <li>북쪽 하늘에서는 네 발로 선 황소를 먼저 찾으세요. 그 아래 두 팔을 든 매 머리 신, 옆의 몸을 세운 하마를 차례로 찾으면 나머지 별자리도 쉽게 따라갈 수 있습니다.</li>
+            <li>목을 오래 젖히면 금방 피곤해집니다. 잠시 기둥 쪽으로 물러나 멀리서 보면 전체 구도가 더 잘 보입니다.</li>
+          </ul></div>
+        </div>
+        <div>
+          <div class="skymap">
+            <svg viewBox="0 0 560 420" role="group" aria-label="천문 천장 도식: 위쪽은 남쪽 하늘, 아래쪽은 북쪽 하늘의 별자리">
+              <rect width="560" height="420" fill="#1A2C5C"/>
+              <g class="fig" data-f="south" tabindex="0" role="button" aria-label="남쪽 하늘: 데칸과 신들의 행렬">
+                <rect x="0" y="0" width="560" height="112" fill="#16254F"/>
+                <g class="body"><line x1="24" y1="10" x2="24" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="50" y1="10" x2="50" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="76" y1="10" x2="76" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="102" y1="10" x2="102" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="128" y1="10" x2="128" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="154" y1="10" x2="154" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="180" y1="10" x2="180" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="206" y1="10" x2="206" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="232" y1="10" x2="232" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="258" y1="10" x2="258" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="284" y1="10" x2="284" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="310" y1="10" x2="310" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="336" y1="10" x2="336" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="362" y1="10" x2="362" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="388" y1="10" x2="388" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="414" y1="10" x2="414" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="440" y1="10" x2="440" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="466" y1="10" x2="466" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="492" y1="10" x2="492" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="518" y1="10" x2="518" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/><line x1="544" y1="10" x2="544" y2="66" stroke="#F0C75E" stroke-width="1" opacity=".35"/></g>
+                <g class="st"><circle cx="37" cy="24" r="2"/><circle cx="63" cy="38" r="2"/><circle cx="89" cy="52" r="2"/><circle cx="115" cy="24" r="2"/><circle cx="141" cy="38" r="2"/><circle cx="167" cy="52" r="2"/><circle cx="193" cy="24" r="2"/><circle cx="219" cy="38" r="2"/><circle cx="245" cy="52" r="2"/><circle cx="271" cy="24" r="2"/><circle cx="297" cy="38" r="2"/><circle cx="323" cy="52" r="2"/><circle cx="349" cy="24" r="2"/><circle cx="375" cy="38" r="2"/><circle cx="401" cy="52" r="2"/><circle cx="427" cy="24" r="2"/><circle cx="453" cy="38" r="2"/><circle cx="479" cy="52" r="2"/><circle cx="505" cy="24" r="2"/><circle cx="531" cy="38" r="2"/></g>
+                <g class="body" style="stroke-width:1.6"><circle cx="30" cy="80" r="3.2"/><line x1="30" y1="83" x2="30" y2="100"/><line x1="30" y1="100" x2="26" y2="106"/><line x1="30" y1="100" x2="34" y2="106"/><circle cx="56" cy="80" r="3.2"/><line x1="56" y1="83" x2="56" y2="100"/><line x1="56" y1="100" x2="52" y2="106"/><line x1="56" y1="100" x2="60" y2="106"/><circle cx="82" cy="80" r="3.2"/><line x1="82" y1="83" x2="82" y2="100"/><line x1="82" y1="100" x2="78" y2="106"/><line x1="82" y1="100" x2="86" y2="106"/><circle cx="108" cy="80" r="3.2"/><line x1="108" y1="83" x2="108" y2="100"/><line x1="108" y1="100" x2="104" y2="106"/><line x1="108" y1="100" x2="112" y2="106"/><circle cx="134" cy="80" r="3.2"/><line x1="134" y1="83" x2="134" y2="100"/><line x1="134" y1="100" x2="130" y2="106"/><line x1="134" y1="100" x2="138" y2="106"/><circle cx="160" cy="80" r="3.2"/><line x1="160" y1="83" x2="160" y2="100"/><line x1="160" y1="100" x2="156" y2="106"/><line x1="160" y1="100" x2="164" y2="106"/><circle cx="186" cy="80" r="3.2"/><line x1="186" y1="83" x2="186" y2="100"/><line x1="186" y1="100" x2="182" y2="106"/><line x1="186" y1="100" x2="190" y2="106"/><circle cx="212" cy="80" r="3.2"/><line x1="212" y1="83" x2="212" y2="100"/><line x1="212" y1="100" x2="208" y2="106"/><line x1="212" y1="100" x2="216" y2="106"/><circle cx="238" cy="80" r="3.2"/><line x1="238" y1="83" x2="238" y2="100"/><line x1="238" y1="100" x2="234" y2="106"/><line x1="238" y1="100" x2="242" y2="106"/><circle cx="264" cy="80" r="3.2"/><line x1="264" y1="83" x2="264" y2="100"/><line x1="264" y1="100" x2="260" y2="106"/><line x1="264" y1="100" x2="268" y2="106"/><circle cx="290" cy="80" r="3.2"/><line x1="290" y1="83" x2="290" y2="100"/><line x1="290" y1="100" x2="286" y2="106"/><line x1="290" y1="100" x2="294" y2="106"/><circle cx="316" cy="80" r="3.2"/><line x1="316" y1="83" x2="316" y2="100"/><line x1="316" y1="100" x2="312" y2="106"/><line x1="316" y1="100" x2="320" y2="106"/><circle cx="342" cy="80" r="3.2"/><line x1="342" y1="83" x2="342" y2="100"/><line x1="342" y1="100" x2="338" y2="106"/><line x1="342" y1="100" x2="346" y2="106"/><circle cx="368" cy="80" r="3.2"/><line x1="368" y1="83" x2="368" y2="100"/><line x1="368" y1="100" x2="364" y2="106"/><line x1="368" y1="100" x2="372" y2="106"/><circle cx="394" cy="80" r="3.2"/><line x1="394" y1="83" x2="394" y2="100"/><line x1="394" y1="100" x2="390" y2="106"/><line x1="394" y1="100" x2="398" y2="106"/><circle cx="420" cy="80" r="3.2"/><line x1="420" y1="83" x2="420" y2="100"/><line x1="420" y1="100" x2="416" y2="106"/><line x1="420" y1="100" x2="424" y2="106"/><circle cx="446" cy="80" r="3.2"/><line x1="446" y1="83" x2="446" y2="100"/><line x1="446" y1="100" x2="442" y2="106"/><line x1="446" y1="100" x2="450" y2="106"/><circle cx="472" cy="80" r="3.2"/><line x1="472" y1="83" x2="472" y2="100"/><line x1="472" y1="100" x2="468" y2="106"/><line x1="472" y1="100" x2="476" y2="106"/><circle cx="498" cy="80" r="3.2"/><line x1="498" y1="83" x2="498" y2="100"/><line x1="498" y1="100" x2="494" y2="106"/><line x1="498" y1="100" x2="502" y2="106"/><circle cx="524" cy="80" r="3.2"/><line x1="524" y1="83" x2="524" y2="100"/><line x1="524" y1="100" x2="520" y2="106"/><line x1="524" y1="100" x2="528" y2="106"/></g>
+              </g>
+              <path d="M0 122 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0 q 17.5 -9 35 0" fill="none" stroke="#F0C75E" stroke-width="2" opacity=".6"/>
+              <text x="12" y="140" font-size="12" style="fill:#B8AE95;font-family:var(--body)">▲ 남쪽 하늘</text>
+              <text x="12" y="156" font-size="12" style="fill:#B8AE95;font-family:var(--body)">▼ 북쪽 하늘</text>
+
+              <g class="fig" data-f="serket" tabindex="0" role="button" aria-label="세르케트 여신">
+                <path class="body" d="M79 150 q6 -8 12 0 M77 153 l-5 -4 M93 153 l5 -4 M85 158 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0 M85 167 L77 240 L93 240 Z M82 182 L62 196 M88 182 L108 196"/>
+                <g class="st"><circle cx="85" cy="205" r="3"/><circle cx="66" cy="194" r="2.5"/></g>
+              </g>
+              <g class="fig" data-f="lion" tabindex="0" role="button" aria-label="누운 사자">
+                <path class="body" d="M92 300 l8 -6 l6 6 l-6 3 Z M130 353 m-38 0 a38 12 0 1 0 76 0 a38 12 0 1 0 -76 0 M92 348 m-10 0 a10 10 0 1 0 20 0 a10 10 0 1 0 -20 0 M168 352 q12 -12 20 -4 M100 365 l-2 16 M160 365 l2 16"/>
+                <g class="st"><circle cx="190" cy="348" r="3"/><circle cx="130" cy="344" r="2.5"/></g>
+              </g>
+              <g class="fig" data-f="crocs" tabindex="0" role="button" aria-label="두 마리 악어">
+                <path class="body" d="M10 392 L30 384 L72 384 L86 390 L72 396 L30 398 Z M178 392 L198 384 L240 384 L254 390 L240 396 L198 398 Z"/>
+                <g class="st"><circle cx="50" cy="390" r="2.5"/><circle cx="220" cy="390" r="2.5"/></g>
+              </g>
+              <g class="fig" data-f="spearman" tabindex="0" role="button" aria-label="악어 앞에 선 남자">
+                <path class="body" d="M270 318 m-8 0 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 M270 326 L270 366 L262 398 M270 366 L278 398 M270 336 L250 350"/>
+                <g class="st"><circle cx="270" cy="350" r="2.5"/></g>
+              </g>
+
+              <g class="fig" data-f="bull" tabindex="0" role="button" aria-label="서 있는 황소, 메스케티우">
+                <path class="body" d="M300 196 Q340 184 384 194 L386 226 Q340 234 302 226 Z M300 200 L284 196 L280 208 L298 214 M286 196 q-6 -12 2 -16 M292 196 q2 -12 10 -12 M308 226 L306 252 M322 228 L322 252 M366 230 L366 252 M380 226 L384 252 M386 200 q12 6 8 24"/>
+                <g class="st"><circle cx="318" cy="206" r="3"/><circle cx="340" cy="202" r="3"/><circle cx="362" cy="208" r="3"/></g>
+              </g>
+              <g class="fig" data-f="herdsman" tabindex="0" role="button" aria-label="밧줄을 쥔 남자">
+                <path class="body" d="M420 158 m-5 0 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0 M420 172 m-8 0 a8 8 0 1 0 16 0 a8 8 0 1 0 -16 0 M420 180 L420 222 L412 252 M420 222 L428 252 M420 192 L404 200 M404 200 Q350 172 296 202"/>
+                <g class="st"><circle cx="420" cy="205" r="2.5"/></g>
+              </g>
+              <g class="fig" data-f="falcon" tabindex="0" role="button" aria-label="두 팔을 든 매 머리 신">
+                <path class="body" d="M282 258 L336 258 q8 -8 16 0 L416 258 M344 290 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0 -18 0 M335 290 l-8 3 l8 2 M344 299 L344 350 L336 390 M344 350 L352 390 M340 306 L326 260 M348 306 L362 260"/>
+                <g class="st"><circle cx="344" cy="325" r="2.5"/><circle cx="300" cy="258" r="2.5"/><circle cx="400" cy="258" r="2.5"/></g>
+              </g>
+              <g class="fig" data-f="hippo" tabindex="0" role="button" aria-label="하마 여신">
+                <path class="body" d="M490 305 m-28 0 a28 58 0 1 0 56 0 a28 58 0 1 0 -56 0 M476 256 Q470 232 488 226 Q504 226 502 248 M476 244 L462 246 L468 254 M500 240 q12 8 10 24 M506 250 q10 10 8 26 M515 246 L534 268 L532 334 L518 358 L524 330 L522 270 Z M470 290 L452 296 M452 262 L452 400"/>
+                <g class="st"><circle cx="490" cy="290" r="3"/><circle cx="484" cy="330" r="3"/><circle cx="527" cy="300" r="2.5"/></g>
+              </g>
+            </svg>
+          </div>
+          <div class="chips" id="figChips" role="group" aria-label="별자리 선택"></div>
+          <div class="sky-note" id="skyNote" aria-live="polite"><b>별자리를 선택하세요.</b></div>
+          <p class="map-hint" style="color:#B8AE95">학술 도판을 참고해 별자리 사이의 관계를 나타낸 도식입니다. 실제 천장의 비율과 세부 모양은 다르며, 현장에서는 좌우가 바뀌어 보일 수 있습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit wrap">
+    <h2>관람하기 전에</h2>
+    <div class="prose">
+      <p>세티 1세 무덤은 왕가의 계곡 일반 입장권과 별도로 전용 입장권이 있어야 들어갈 수 있습니다. 개방 여부와 사진 촬영 규정은 바뀔 수 있으니 현장 안내를 따라 주세요.</p>
+      <p>왕가의 계곡에서는 무덤 안에서 가이드 해설이 제한되는 경우가 많습니다. 들어가기 전에 이 페이지를 한 번 훑어보시면 안에서 훨씬 많은 것이 눈에 들어옵니다.</p>
+      <ul class="etiquette">
+        <li>플래시는 벽화의 색을 상하게 하므로 사용하지 않습니다.</li>
+        <li>벽을 만지거나 기대지 않습니다. 배낭은 앞으로 메면 벽에 닿지 않습니다.</li>
+        <li>안은 바깥보다 덥고 습합니다. 물은 들어가기 전에 마시고, 가벼운 옷차림을 권합니다.</li>
+        <li>계단과 경사로가 많으니 굽이 낮고 미끄럽지 않은 신발을 신어 주세요.</li>
+      </ul>
+      <p>무덤에서 나온 유물은 여러 곳에 흩어져 있습니다. 설화석고 석관은 런던 존 손 경 박물관에 있고, 복도 G 입구 양쪽에 있던, 하토르 여신이 왕에게 메나트 목걸이를 내미는 벽 조각 두 점은 1820년대 말 샹폴리옹과 로셀리니가 떼어 가 지금은 파리 루브르 박물관과 피렌체 고고학 박물관에 있습니다. 왕의 미라는 1881년 데이르 엘바하리의 은닉처에서 발견되었으며, 현재 카이로 이집트 국립문명박물관(NMEC)의 로열 머미관에서 만날 수 있습니다.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap"><p style="margin:0 0 .4rem">구역 구분과 공간별 장식 내용은 Theban Mapping Project의 KV17 기록을, 천문 천장은 학술 도판을 참고했습니다. 모든 그림은 설명용 도식입니다.</p><p style="margin:0;font-weight:700">Copyright © 2026 Hyeonjin Jang. All rights reserved.</p></footer>
+
+<button class="theme-toggle" id="themeBtn" type="button">화면 밝기 전환</button>
+
+<script>
+const zones = {
+  A:{t:"A 입구 · 들어가기 전에",p:"무덤에 들어가기 전에 아래 사항을 확인해 주세요.",tags:[],
+    tips:["세티 1세 무덤은 일반 입장권과 별도로 전용 입장권이 필요합니다. 입구에서 확인하니 꺼내 두세요.","안에는 계단과 경사로가 매장실까지 계속됩니다. 굽이 낮고 미끄럽지 않은 신발이 좋습니다.","안은 바깥보다 덥고 습합니다. 물은 미리 마시고 가벼운 옷차림으로 들어가세요.","플래시는 쓰지 않습니다. 사진 촬영은 현장 안내를 따라 주세요.","벽을 만지거나 기대지 마세요. 배낭은 앞으로 메면 벽에 닿지 않습니다.","무덤 안에서는 해설이 제한되는 경우가 많습니다. 이 페이지를 미리 한 번 훑어보고 들어가세요."]},
+  B:{t:"B 첫째 복도",p:"완만하게 내려가는 복도로, 벽의 그림은 윤곽을 살짝 도드라지게 조각한 뒤 색을 입힌 것입니다. 왼쪽 벽에서 세티 1세가 태양신 라-호라크티 앞에 서 있고, 이어서 태양신을 찬양하는 '라의 연도'의 첫 장면과 첫 구절이 나옵니다. 이 첫 장면이 왕의 무덤에 그려진 것은 이 무덤이 처음입니다. 오른쪽 벽에는 연도의 본문이 이어집니다.",tags:[],
+    tips:["왼쪽 벽에서 노란 태양 원반을 찾아보세요. 원반 안에 쇠똥구리와 숫양 머리 신이 함께 들어 있는데, 아침의 태양과 밤의 태양이 한 몸이라는 뜻입니다.","천장에는 날개를 편 새가 줄지어 있습니다. 대부분은 독수리 머리지만 사이사이 코브라 머리를 한 새가 섞여 있습니다. 천장 색이 많이 바래 있어 잘 안 보일 수 있으니 조명이 닿는 곳에서 찾아보세요.","벽과 나란히 비스듬하게 보면 그림의 윤곽이 살짝 솟아 있는 것이 보입니다. 붓으로만 그린 그림이 아니라 먼저 조각을 하고 색을 입혔기 때문입니다."]},
+  C:{t:"C 둘째 복도 (계단)",p:"30도 각도로 가파르게 내려가는 계단 복도입니다. 입구 위에는 날개 달린 태양 원반이 있습니다. 벽 윗부분에는 라의 연도에 나오는 태양신의 여러 모습이 줄지어 있고, 그 아래로 양쪽 벽에 거의 같은 내용의 암두아트 3시가 이어집니다. 3시 장면은 일부만 새기고 나머지는 윤곽선만 그린 채 남아 있습니다. 복도 끝에는 아누비스가, 그 아래 왼쪽 벽에는 이시스, 오른쪽 벽에는 네프티스가 있습니다.",tags:[["amduat","암두아트"]],
+    tips:["가장 가파른 구간입니다. 사진은 멈춰 선 상태에서만 찍으세요.","새겨서 색을 칠한 부분과 선만 그어진 부분이 만나는 경계를 찾아보세요. 장인들이 어떤 순서로 작업했는지 보입니다.","벽이 위·가운데·아래 세 줄로 나뉩니다. 가운데 줄의 태양의 배를 먼저 찾고 위아래로 눈을 넓혀 가면 읽기 쉽습니다."]},
+  D:{t:"D 셋째 복도",p:"경사진 복도로, 오른쪽 벽에 암두아트 4시, 왼쪽 벽에 5시가 그려져 있습니다. 물 없는 모래 땅인 소카르의 나라를 지나는 장면으로, 비탈진 복도 자체가 저승으로 내려가는 길이 됩니다.",tags:[["amduat","암두아트"]],
+    tips:["오른쪽 벽에서 뱀 모양으로 변한 배를 신들이 밧줄로 끌고 가는 장면을 찾아보세요. 지그재그로 꺾인 통로 그림은 지금 걷는 비탈과 같은 이야기를 합니다."]},
+  E:{t:"E 우물 방",p:"바닥에 깊은 수직 갱도가 뚫린 방입니다. 왼쪽 벽에는 아누비스, 호루스의 안내를 받아 이시스에게 가는 왕, 하토르에게 포도주를 바치는 왕, 오시리스 앞의 왕, 서쪽의 여신이 차례로 그려져 있고, 오른쪽 벽도 비슷한 장면으로 채워져 있습니다. 천장은 파란 바탕에 노란 별입니다. 벨초니가 갱도를 메운 채 떠난 이듬해 빗물이 흘러들어 아래쪽 벽과 천장 일부가 떨어져 나갔고, 1825년 입구에 둑을 완성한 뒤로는 침수되지 않았습니다.",tags:[],
+    tips:["갱도 위로 난 통로를 건너게 됩니다. 멈춰서 사진을 찍기보다 건넌 뒤에 뒤돌아보세요.","왼쪽 벽 장면을 입구 쪽부터 순서대로 보세요. 왕이 신들에게 차례로 인도되는 흐름이 보입니다. 왕의 이름은 타원형 테두리(카르투슈) 안에 적혀 있습니다."]},
+  F:{t:"F 기둥 홀",p:"가운데 통로 양옆에 기둥이 두 개씩 선 거의 정사각형 방입니다. 왼쪽 벽은 문의 서 5시, 오른쪽 벽은 6시로 채워져 있고, 5시에는 이집트인, 아시아인, 누비아인, 리비아인 네 민족이 생김새를 달리해 처음으로 구별되어 그려졌습니다. 안쪽 벽에서는 호루스가 왕을 오시리스와 하토르에게 소개합니다. 몇 계단 아래 옆방 Fa에는 암두아트 9~11시가 검은 윤곽선으로만 남아 있는데, 무덤에서 조각하고 색을 입히는 단계까지 가지 못한 유일한 방입니다. 무덤의 축은 이 방 안쪽의 계단에서 왼쪽으로 틀어집니다.",tags:[["gates","문의 서"],["amduat","암두아트"]],
+    tips:["왼쪽 벽에서 네 민족 장면을 찾아보세요. 머리 모양, 피부색, 옷차림이 서로 다르게 그려져 있습니다.","기둥을 한 바퀴 돌며 네 면을 모두 보세요. 면마다 왕이 다른 신과 마주 서 있습니다.","옆방 Fa를 들여다볼 수 있다면 꼭 보세요. 완성된 홀의 벽과 윤곽선만 있는 Fa의 벽을 번갈아 보면 밑그림에서 조각, 채색으로 이어지는 작업 순서가 한눈에 보입니다."]},
+  G:{t:"G · H 아래쪽 복도",p:"기둥 홀 안쪽 계단을 내려가면 무덤의 축이 다시 조금 오른쪽으로 꺾입니다. 복도 G 입구 양쪽에는 원래 하토르 여신이 왕에게 메나트 목걸이를 내미는 벽 조각이 있었지만, 1820년대 말 샹폴리옹과 로셀리니가 떼어 가 지금은 루브르와 피렌체에 있습니다. 복도 G의 벽은 입 열기 의식으로 채워져 있습니다. 다섯 계단 아래 복도 H에서는 벽 위쪽 홈에 입 열기 의식이, 그 아래에 피라미드 텍스트에서 유래한 '호루스의 눈 연도'가 새겨져 있고, 천장은 파란 바탕에 노란 별입니다.",tags:[["mouth","입 열기 의식"]],
+    tips:["복도 G 입구 양쪽 벽에서 벽 조각을 떼어 낸 자리를 찾아보세요. 루브르와 피렌체로 간 하토르 그림이 있던 곳입니다.","표범 가죽을 걸친 사제를 먼저 찾으면 입 열기 의식 장면이 쉽게 읽힙니다.","왕의 이름 테두리(카르투슈)나 인물이 도려내진 자리가 여러 곳 있습니다. 후대에 사람들이 훼손한 흔적입니다."]},
+  I:{t:"I 전실",p:"매장실 바로 앞의 방입니다. 벽에는 왕이 여러 신과 함께 있는 장면이, 천장에는 별이 그려져 있습니다. 19세기에 학자들이 젖은 종이를 벽에 대고 본을 뜨면서 이 방의 색이 많이 떨어져 나갔습니다.",tags:[],
+    tips:["다른 방보다 색이 흐리다면 19세기 본뜨기 작업 때문입니다. 지나온 복도의 선명한 색과 비교해 보세요.","신은 머리 모양으로 구별해 보세요. 자칼 머리는 아누비스, 매 머리는 호루스, 흰 관을 쓰고 미라처럼 감싼 몸은 오시리스, 소뿔 사이에 태양 원반을 얹은 여신은 하토르입니다."]},
+  J:{t:"J 매장실",p:"무덤의 가장 깊은 곳으로, 기둥이 선 앞쪽 공간과 계단 아래 아치형 천장의 뒤쪽 공간, 다섯 개의 옆방(Ja~Je), 바닥에서 시작되는 긴 터널(K)로 이루어져 있습니다. 세티 1세가 묻힌 뒤에는 한동안 람세스 1세와 람세스 2세의 미라를 임시로 숨겨 두는 곳으로도 쓰였습니다. 벨초니가 발견할 당시 옆방에서 미라로 만든 소가 나와, 한때 '아피스의 무덤'이라 불리기도 했습니다. 아래 평면도에서 방을 하나씩 눌러 보세요.",tags:[["ceiling","천문 천장"],["gates","문의 서"],["amduat","암두아트"]],
+    tips:["옆방과 터널은 보통 들어갈 수 없습니다. 문 앞에서 안을 들여다보는 정도로 관람하세요."]}
+};
+
+const jRooms = {
+  J1:{t:"J 앞쪽 기둥 공간",p:"매장실 입구 위에는 날개 달린 태양 원반이 있습니다. 가운데 통로를 따라 기둥 여섯 개가 두 줄로 서 있고, 벽은 문의 서 2·3·5시로 채워져 있습니다. 기둥에는 신들과, 신들 앞에 선 왕이 새겨져 있습니다. 기둥 하나는 구조적으로 손상되었고, 그 맞은편 기둥의 한 면은 19세기 렙시우스 원정대가 떼어 갔습니다.",tips:["기둥 사이를 지나며 면마다 다른 신을 찾아보세요. 끝의 계단을 내려가면 아치형 천장의 뒤쪽 공간입니다."]},
+  J2:{t:"J 뒤쪽 아치형 공간",p:"기둥 공간에서 세 갈래 계단으로 내려가는 낮은 공간입니다. 왕묘 가운데 처음으로 천장을 아치형으로 만들었고, 그 천장에 천문도가 그려져 있습니다. 벽에는 암두아트 세 시간이, 천장 바로 아래 왼쪽 벽에는 이시스, 오른쪽 벽에는 네프티스가 날개를 펴고 무릎을 꿇고 있습니다. 벽 아래쪽에는 오목한 자리가, 높은 곳에는 주술용 벽돌을 넣던 작은 감실이 양쪽에 한 쌍씩 있습니다. 1902~1903년 하워드 카터가 무너지던 벽 아래쪽과 문을 벽돌로 보강했습니다.",tips:["천장을 본 뒤에는 벽 꼭대기의 두 여신을 찾아보세요. 왕의 관이 놓인 자리를 양쪽에서 지키는 모습입니다.","벽 아래쪽에 돌이 아닌 벽돌로 쌓은 부분이 보이면 카터의 보강 흔적입니다."],more:"ceiling"},
+  Ja:{t:"Ja 옆방",p:"앞쪽 기둥 공간의 왼쪽 벽으로 이어진 방으로, 벽이 문의 서 4시로 채워져 있습니다. 문의 두께면에는 왕과 그의 카(영혼의 분신)가 향유를 바치는 모습이 있습니다."},
+  Jb:{t:"Jb 옆방",p:"뒤쪽 공간의 왼쪽 벽으로 이어진, 기둥 두 개가 선 방입니다. 세 벽의 중간 높이에 넓은 선반이 둘려 있고, 선반 아래의 얕은 홈마다 동물 머리 침대, 상자, 감실 같은 장례 용품이 그려져 있습니다. 선반 위 벽에는 암두아트 6~8시가, 기둥에는 오시리스가 있습니다. 문 안쪽에는 상이집트와 하이집트의 식물 위에 앉은 코브라 여신이 있고, 바깥쪽의 하토르 여신은 일부 잘려 나갔습니다.",tips:["선반 아래 그림에서 사자 머리가 달린 침대를 찾아보세요. 실제 왕의 무덤에 넣던 장례용 침대를 그린 것입니다."]},
+  Jc:{t:"Jc 옆방",p:"뒤쪽 공간 안쪽 벽의 왼쪽 끝에 난 문으로 들어가, 매장실 뒤편을 따라 오른쪽으로 길게 뻗은 방입니다. 완성되지 않아 장식이 없습니다. 기둥 네 개가 한 줄로 서 있는데, 그중 일부는 바로 아래를 지나는 터널 K 때문에 암반이 움직여 손상되었습니다. 들어가는 문은 무너진 벽을 하워드 카터가 벽돌로 다시 쌓고 아치를 얹은 것입니다."},
+  Jd:{t:"Jd 옆방",p:"뒤쪽 공간 오른쪽 벽의 안쪽 끝에 난 문으로 들어가는, 매장실 뒤편의 방입니다. 안은 장식이 없습니다. 문의 두께면에만 사람 모습을 한 제드 기둥(오시리스의 등뼈를 뜻하는 기둥)이 그려졌던 흔적이 남아 있습니다."},
+  Je:{t:"Je 옆방",p:"앞쪽 기둥 공간의 오른쪽 벽으로 이어진 방으로, 벽이 '하늘 암소의 서'로 채워져 있습니다. 늙은 태양신에게 사람들이 반역하자 신이 벌을 내린 뒤, 하늘 암소의 등에 올라 하늘로 물러났다는 이야기입니다. 안쪽 벽의 커다란 암소 그림은 19세기 본뜨기 작업으로 색이 많이 떨어졌고, 다른 벽에도 훼손 흔적이 있습니다. 문의 두께면에는 왕이 색깔 천이 든 상자를 바치는 모습이 있습니다.",tips:["문 앞에서 안쪽 벽을 보면 별이 그려진 배를 가진 큰 암소가 보입니다. 이 암소의 몸이 곧 하늘입니다."]},
+  CS:{t:"카노포스 감실",p:"뒤쪽 공간 왼쪽 벽, Jb로 가는 문보다 안쪽에 있는 작은 오목한 공간으로, 왕의 내장을 담은 카노포스 상자를 모시던 작은 사당으로 추정됩니다. 왼쪽 벽에는 내장을 지키는 호루스의 네 아들, 안쪽 벽에는 오시리스, 오른쪽 벽에는 오시리스의 입을 여는 아누비스가 그려져 있습니다."},
+  K:{t:"K 터널",p:"뒤쪽 공간 안쪽 끝 가운데 바닥에서 계단으로 시작해 암반 속으로 내려가는 통로입니다. 벨초니는 세티 1세의 석관을 바로 이 입구 위, 무덤의 중심축 위에서 발견했습니다. 1960년대 셰이크 알리 압델 라술이 파 들어갔지만 약 130m에서 멈췄고, 2007~2010년 자히 하와스 팀이 약 174m 지점에서 막다른 끝에 닿았습니다. 54개의 계단, 그리고 가짜 문에 신관 문자로 적힌 '문설주를 올리고 통로를 넓혀라'라는 작업 지시가 발견되었습니다. 하와스는 왕이 비밀스러운 또 하나의 무덤을 만들다 세상을 떠나 공사가 멈춘 것으로 봅니다.",tips:["일반 관람객은 들어갈 수 없습니다. 바닥의 입구 쪽만 바라볼 수 있습니다."]}
+};
+const jOrder=["J1","J2","Ja","Jb","Jc","Jd","Je","CS","K"];
+const jPlan=`<svg viewBox="0 0 320 320" role="group" aria-label="매장실 J 평면 도식">
+  <g class="jroom" data-j="Jc" tabindex="0" role="button" aria-label="Jc 옆방"><rect class="rm" x="110" y="22" width="150" height="40"/><text x="120" y="47">Jc</text>
+    <g style="fill:var(--muted)"><rect x="176" y="38" width="7" height="7"/><rect x="198" y="38" width="7" height="7"/><rect x="220" y="38" width="7" height="7"/><rect x="242" y="38" width="7" height="7"/></g></g>
+  <g class="jroom" data-j="J2" tabindex="0" role="button" aria-label="J 뒤쪽 아치형 공간"><rect class="rm" x="110" y="70" width="100" height="106"/><path d="M114 136 Q160 90 206 136" style="fill:none;stroke:var(--muted);stroke-dasharray:3 3"/><text x="140" y="160">J 뒤쪽</text></g>
+  <path d="M160 74 L160 6" style="fill:none;stroke:var(--ink);stroke-dasharray:3 3"/><text x="166" y="14" style="font-family:var(--body);font-size:10px;fill:var(--muted)">터널 K (암반 아래로)</text>
+  <g class="jroom" data-j="K" tabindex="0" role="button" aria-label="K 터널"><rect class="rm" x="148" y="74" width="24" height="24" style="stroke-dasharray:3 2"/><path d="M152 80 h16 M152 86 h16 M152 92 h16" style="stroke:var(--muted);stroke-width:1"/><text x="156" y="113" style="font-size:11px">K</text></g>
+  <g class="jroom" data-j="Jd" tabindex="0" role="button" aria-label="Jd 옆방"><rect class="rm" x="218" y="70" width="60" height="44"/><text x="238" y="97">Jd</text></g>
+  <g class="jroom" data-j="CS" tabindex="0" role="button" aria-label="카노포스 감실"><rect class="rm" x="80" y="76" width="28" height="24"/><text x="83" y="92" style="font-size:10px">감실</text></g>
+  <g class="jroom" data-j="Jb" tabindex="0" role="button" aria-label="Jb 옆방"><rect class="rm" x="30" y="106" width="72" height="64"/><text x="56" y="143">Jb</text></g>
+  <g class="jroom" data-j="J1" tabindex="0" role="button" aria-label="J 앞쪽 기둥 공간"><rect class="rm" x="110" y="180" width="100" height="96"/>
+    <g style="fill:var(--muted)"><rect x="134" y="192" width="8" height="8"/><rect x="134" y="220" width="8" height="8"/><rect x="134" y="248" width="8" height="8"/><rect x="178" y="192" width="8" height="8"/><rect x="178" y="220" width="8" height="8"/><rect x="178" y="248" width="8" height="8"/></g><text x="144" y="240" style="font-size:11px">앞쪽</text></g>
+  <g class="jroom" data-j="Ja" tabindex="0" role="button" aria-label="Ja 옆방"><rect class="rm" x="46" y="200" width="58" height="52"/><text x="64" y="231">Ja</text></g>
+  <g class="jroom" data-j="Je" tabindex="0" role="button" aria-label="Je 옆방"><rect class="rm" x="216" y="200" width="58" height="52"/><text x="234" y="231">Je</text></g>
+  <path d="M160 316 L160 282 M152 290 L160 280 L168 290" style="fill:none;stroke:var(--red);stroke-width:2"/>
+  <text x="172" y="312" style="font-family:var(--body);font-size:11px;fill:var(--muted)">전실 I에서 들어옴</text>
+  <text x="8" y="300" style="font-family:var(--body);font-size:10px;fill:var(--muted)">◀ 왼쪽</text><text x="270" y="300" style="font-family:var(--body);font-size:10px;fill:var(--muted)">오른쪽 ▶</text>
+</svg>`;
+function jHTML(){
+  return `<div class="jwrap"><h3>매장실 안의 방들</h3><div class="jgrid"><div class="jplan">${jPlan}<p class="map-hint">입구에서 안쪽을 바라본 방향 기준의 도식으로, 실제 비율과 다릅니다.</p></div><div><div class="chips" id="jChips" role="group" aria-label="매장실 방 선택"></div><div class="jnote" id="jNote" aria-live="polite"></div></div></div></div>`;
+}
+function showJ(k){
+  document.querySelectorAll('.jroom').forEach(r=>r.classList.toggle('active',r.dataset.j===k));
+  document.querySelectorAll('#jChips button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.j===k?'true':'false'));
+  const r=jRooms[k];
+  const tip=r.tips?`<div class="tip"><b>관람 팁</b><ul>${r.tips.map(t=>`<li>${t}</li>`).join('')}</ul></div>`:'';
+  const more=r.more?`<div style="margin-top:.7rem"><a class="tag" href="#${r.more}">천문 천장 보기</a></div>`:'';
+  document.getElementById('jNote').innerHTML=`<h4>${r.t}</h4><p>${r.p}</p>${tip}${more}`;
+}
+function initJ(){
+  const c=document.getElementById('jChips');
+  jOrder.forEach(k=>{const b=document.createElement('button');b.type='button';b.dataset.j=k;b.textContent=jRooms[k].t.replace(' 옆방','');b.addEventListener('click',()=>showJ(k));c.appendChild(b);});
+  document.querySelectorAll('.jroom').forEach(r=>{
+    r.addEventListener('click',()=>showJ(r.dataset.j));
+    r.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showJ(r.dataset.j);}});
+  });
+  showJ('J2');
+}
+const zoneChips=document.getElementById('zoneChips');
+Object.keys(zones).forEach(k=>{const b=document.createElement('button');b.type='button';b.dataset.z=k;b.textContent=zones[k].t;b.addEventListener('click',()=>showZone(k));zoneChips.appendChild(b);});
+const panel = document.getElementById('panel');
+function showZone(k){
+  document.querySelectorAll('.zone').forEach(z=>z.classList.toggle('active', z.dataset.z===k));
+  zoneChips.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.z===k?'true':'false'));
+  const z = zones[k];
+  const tags = z.tags.map(([id,l])=>`<a class="tag" href="#${id}">${l} 보기</a>`).join('');
+  const tip = z.tips&&z.tips.length ? `<div class="tip"><b>${k==='A'?'입장 전 확인 사항':'관람 팁'}</b><ul>${z.tips.map(t=>`<li>${t}</li>`).join('')}</ul></div>` : '';
+  panel.innerHTML = `<h2>${z.t}</h2><p>${z.p}</p>${tip}<div style="margin-top:.8rem">${tags}</div>${k==='J'?jHTML():''}`;
+  if(k==='J') initJ();
+}
+document.querySelectorAll('.zone').forEach(z=>{
+  z.addEventListener('click',()=>showZone(z.dataset.z));
+  z.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showZone(z.dataset.z);}});
+});
+showZone('J');
+
+const hours = [
+  "태양의 배가 서쪽 지평선을 넘어 저승의 입구로 들어섭니다. 맞이하는 신들이 새벽 원숭이들과 함께 등장합니다.",
+  "비옥한 물의 땅. 곡식과 관련된 신들이 등장하고, 태양은 저승의 주민들에게 땅과 양식을 나누어 줍니다.",
+  "오시리스의 물길을 따라가며, 쉬고 있던 오시리스의 여러 모습이 태양 빛으로 기운을 되찾습니다.",
+  "소카르의 땅 로스타우. 물이 없는 모래 지대라 배는 뱀 모양으로 변해 신들에게 끌려가며, 지그재그 통로를 지납니다.",
+  "소카르의 동굴. 모래 언덕 아래 감춰진 공간에서 부활의 힘이 준비됩니다. 여정의 비밀스러운 중심입니다.",
+  "저승의 가장 깊은 곳. 태양신의 영혼과 오시리스의 몸이 하나가 되며 재생이 시작됩니다.",
+  "태양을 삼키려는 혼돈의 뱀 아펩이 결박되고 제압됩니다. 가장 위험한 고비입니다.",
+  "무덤 동굴에 머무는 신들에게 태양이 말을 걸면 그들이 응답합니다. 옷을 상징하는 기호가 반복해서 등장합니다.",
+  "노를 든 신들이 배를 저어 가고, 저승의 주민들에게 물과 양식이 돌아갑니다.",
+  "정화의 물. 물에 빠져 죽은 이들까지 구원받으며 새벽을 향한 준비가 이어집니다.",
+  "적들이 불구덩이에서 벌을 받고, 태양의 원반이 떠오를 채비를 마칩니다.",
+  "배가 거대한 뱀의 몸속을 꼬리에서 머리로 통과하고, 태양은 새벽의 쇠똥구리로 다시 태어나 동쪽 하늘에 떠오릅니다."
+];
+const hoursEl = document.querySelector('.hours');
+const hourNote = document.getElementById('hourNote');
+hours.forEach((_,i)=>{
+  const b = document.createElement('button');
+  b.type='button'; b.textContent = i+1; b.setAttribute('aria-pressed','false');
+  b.setAttribute('aria-label', `${i+1}시`);
+  if(i===3||i===4) b.classList.add('here');
+  b.addEventListener('click',()=>pickHour(i));
+  hoursEl.appendChild(b);
+});
+function pickHour(i){
+  hoursEl.querySelectorAll('button').forEach((b,j)=>b.setAttribute('aria-pressed', j===i?'true':'false'));
+  hourNote.innerHTML = `<b>${i+1}시</b><br>${hours[i]}`;
+}
+pickHour(3);
+
+const figs = {
+  bull:["메스케티우 (서 있는 황소)","북쪽 하늘의 중심 별자리입니다. 더 오래된 관 뚜껑 그림에서는 일곱 개의 별이 든 소의 앞다리로 그려져 흔히 북두칠성과 연결됩니다. 세티 1세 천장에서는 앞다리가 아니라 네 발로 선 황소 전체로 그려진 것이 특징이며, 정확히 어느 별들에 해당하는지는 학자마다 해석이 다릅니다."],
+  herdsman:["밧줄을 쥔 남자","황소 뒤에서 하늘의 밧줄을 쥐고 있는 인물로, 머리에 원반을 얹고 있습니다. 황소가 하늘에 매여 있다는 생각을 보여줍니다."],
+  falcon:["두 팔을 든 매 머리 신","두 팔을 들어 가로로 긴 막대를 받치고 있는데, 이 막대가 황소 발굽 바로 아래에 있어 황소를 떠받치는 받침처럼 보입니다. 이것을 작살로 보고 그 끝이 하마를 겨눈다고 해석하는 연구도 있습니다."],
+  hippo:["하마 여신","몸을 곧게 세운 하마로, 긴 갈기가 있고 등에는 큰 악어가 얹혀 있습니다. 세티 1세 천장에서는 계류 말뚝 하나를 쥐고 있습니다. 흔히 이시스-자메트, 또는 출산을 돕는 여신 타와렛과 연결됩니다."],
+  serket:["세르케트 여신","머리에 전갈을 얹은 여신입니다. 세티 1세 천장에서는 왼쪽, 악어와 누운 사자 위쪽에 그려져 있습니다. 전갈은 불길하게 여겨져 꼬리 없이 그려지는 경우가 많습니다."],
+  lion:["누운 사자","두 마리 악어 사이에 엎드린 사자입니다. 세티 1세 천장의 사자는 보통 사자의 꼬리를 가졌고, 꼬리 끝에 별 하나가 찍혀 있기도 합니다. 사자 머리 위, 여신의 발치에 있는 작은 매는 별자리가 아니라 옆에 선 남자의 이름 '호루스'를 적은 글자로 보는 해석이 있습니다."],
+  crocs:["두 마리 악어","누운 사자의 양옆에 한 마리씩 그려진 악어입니다. 하마 등에 얹힌 악어와는 따로 있는 별자리입니다."],
+  spearman:["악어 앞에 선 남자","창을 찌르는 자세로 악어 앞에 서 있지만, 손에 창은 그려져 있지 않습니다. 매 머리 신과 같은 별자리를 두 모습으로 그린 것이라는 해석도 있습니다."],
+  south:["남쪽 하늘: 데칸과 신들의 행렬","물결선 반대쪽에는 밤 시간을 재던 데칸 별들의 이름이 칸마다 적혀 있고, 그 아래로 데칸을 맡은 신들이 길게 줄지어 있습니다. 행성의 신들도 이쪽에 있습니다. 세티 1세 천장은 이 신들의 행렬이 두드러지는 대신, 오리온(사흐)이나 시리우스(소프데트) 같은 남쪽 별자리는 이름 옆 작은 그림 정도로 작게 그려져 있습니다."]
+};
+const figChips=document.getElementById('figChips');
+Object.keys(figs).forEach(k=>{const b=document.createElement('button');b.type='button';b.dataset.f=k;b.textContent=figs[k][0];b.addEventListener('click',()=>showFig(k));figChips.appendChild(b);});
+const skyNote = document.getElementById('skyNote');
+function showFig(k){
+  document.querySelectorAll('.fig').forEach(f=>f.classList.toggle('active', f.dataset.f===k));
+  figChips.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===k?'true':'false'));
+  skyNote.innerHTML = `<b>${figs[k][0]}</b><br>${figs[k][1]}`;
+}
+document.querySelectorAll('.fig').forEach(f=>{
+  f.addEventListener('click',()=>showFig(f.dataset.f));
+  f.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showFig(f.dataset.f);}});
+});
+
+const root = document.documentElement;
+try{const s=localStorage.getItem('kv17-theme'); if(s) root.dataset.theme=s;}catch(e){}
+document.getElementById('themeBtn').addEventListener('click',()=>{
+  const dark = root.dataset.theme ? root.dataset.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+  try{localStorage.setItem('kv17-theme', root.dataset.theme);}catch(e){}
+});
+</script>
+</body>
+</html>
